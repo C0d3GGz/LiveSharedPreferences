@@ -9,9 +9,9 @@ class LiveSharedPreferences(val sharedPreferences: SharedPreferences){
 
     private val cachedData = mutableMapOf<OuterKey, MutableLiveData<Any>>()
 
-    inline fun <reified T>getValue(key: String, defaultValue: T? = null): LiveData<T> {
+    inline fun <reified T>getValue(key: String, defaultValue: T? = null): LiveData<T> { // TODO result type T is incorrect if you use null strings...
 
-        val value: Any
+        val value: Any?
         val outerKey: OuterKey
         
         when(T::class.java.simpleName){
@@ -32,7 +32,7 @@ class LiveSharedPreferences(val sharedPreferences: SharedPreferences){
                 outerKey = OuterKey(key, Float.javaClass)
             }
             else -> {
-                value = sharedPreferences.getString(key, defaultValue as String? ?: "") ?: ""
+                value = sharedPreferences.getString(key, defaultValue as String?)
                 outerKey = OuterKey(key, String.javaClass)
             }
         }
@@ -45,7 +45,7 @@ class LiveSharedPreferences(val sharedPreferences: SharedPreferences){
         return `access$cachedData`[outerKey] as LiveData<T>
     }
 
-    inline fun <reified T>setValue(key: String, value: T){
+    inline fun <reified T>setValue(key: String, value: T?){
 
         val outerKey: OuterKey
 
@@ -67,11 +67,12 @@ class LiveSharedPreferences(val sharedPreferences: SharedPreferences){
                 outerKey = OuterKey(key, Boolean.javaClass)
             }
             else ->{
-                sharedPreferences.apply { putString(key, value.toString()) }
+                sharedPreferences.apply { putString(key, value as String?) }
                 outerKey = OuterKey(key, String.javaClass)
             }
         }
 
+        //TODO: creation not necessary
         if(`access$cachedData`[outerKey] == null){
             `access$cachedData`[outerKey] = MutableLiveData()
         }
