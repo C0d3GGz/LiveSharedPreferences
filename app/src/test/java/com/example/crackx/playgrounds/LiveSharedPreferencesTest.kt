@@ -32,7 +32,7 @@ class LiveSharedPreferencesTest{
         val sut = LiveSharedPreferences(sharedPrefs)
         sut.setValue(KEY, VALUE)
 
-        `when`(sharedPrefs.getString(eq(KEY), anyString())).thenReturn(VALUE)
+        `when`(sharedPrefs.getString(eq(KEY), eq(null))).thenReturn(VALUE)
         val result = sut.getValue<String>(KEY).value
 
         assertThat(result, `is`(VALUE))

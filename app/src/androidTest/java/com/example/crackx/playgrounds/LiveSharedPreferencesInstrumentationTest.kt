@@ -39,9 +39,9 @@ class LiveSharedPreferencesInstrumentationTest{
     @Test
     fun shouldAcceptNullString(){
         val KEY = "stringKey"
-        sut.setValue<String?>(KEY, null)
+        sut.setValue<String>(KEY, null)
 
-        val result = sut.getValue<String?>(KEY).value
+        val result = sut.getValue<String>(KEY).value
         assertNull(result)
     }
 }
